@@ -11,7 +11,7 @@ Widget::Widget(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setGeometry(100,100,640,480);
-    f5.start(0);
+    f5.start(15);
     f4.start(1000);
     connect(&f5,SIGNAL(timeout()),this,SLOT(updateGL()));
     connect(&f4,SIGNAL(timeout()),this,SLOT(printFps()));
@@ -36,7 +36,18 @@ void Widget::initializeGL() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glEnableClientState(GL_VERTEX_ARRAY);
+
+
+    glEnable(GL_MULTISAMPLE);
+    GLint bufs;
+    GLint samples;
+    glGetIntegerv(GL_SAMPLE_BUFFERS, &bufs);
+    glGetIntegerv(GL_SAMPLES, &samples);
+    qDebug("Have %d buffers and %d samples", bufs, samples);
+
     //glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+    buffer=new QGLBuffer(QGLBuffer::VertexBuffer);
+    buffer->create();
 
 
 }
@@ -48,8 +59,6 @@ void Widget::paintGL() {
     glLoadIdentity();
     glTranslatef(0,0,-6);
 
-    buffer=new QGLBuffer(QGLBuffer::VertexBuffer);
-    buffer->create();
     buffer->bind();
 
     GLfloat data[]={
@@ -59,7 +68,6 @@ void Widget::paintGL() {
     };
     buffer->allocate(data,sizeof(GLfloat)*9);
 
-
     glVertexPointer(3,GL_FLOAT,0,0);
     glColor3f(1,1,1);
     glDrawArrays(GL_LINE_LOOP,0,3);
@@ -68,7 +76,7 @@ void Widget::paintGL() {
         glColor3f(0.5+sin(fps)*.5,0,0);
         glVertex3f(0,0,0);
         glColor3f(0.5+sin(fps*.9)*.5,0.5+sin(fps*.8)*.5,0);
-        glVertex3f(1,0,0);
+        glVertex3f(3,0,0);
         glColor3f(0.5+sin(fps*.7)*.5,0.5+sin(fps*.6)*.5,0.5+sin(fps*2)*.5);
         glVertex3f(1,1,0);
     } glEnd();
