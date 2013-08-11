@@ -35,7 +35,7 @@ void Widget::initializeGL() {
     glClearDepth(1);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-    glEnableClientState(GL_VERTEX_ARRAY);
+    //glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 
     glEnable(GL_MULTISAMPLE);
@@ -70,8 +70,9 @@ void Widget::paintGL() {
 
     buffer->bind();
 
+    glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(2,GL_FLOAT,0,0);
-    glColor3f(1,1,1);
+    glColor3f(1,1,0);
     glDrawArrays(GL_LINE_STRIP,0,2048);
 
     glBegin(GL_TRIANGLES);{
