@@ -6,6 +6,8 @@
 #include <QGLWidget>
 #include <QTimer>
 #include <QGLBuffer>
+#include <ldCLtemplate.h>
+#include <ctime>
 
 namespace Ui {
 class Widget;
@@ -32,6 +34,7 @@ private:
     QTimer f5,f4;
     int sfps;
     QGLBuffer *buffer;
+    LDCL ldcl;
 };
 
 #endif // WIDGET_H

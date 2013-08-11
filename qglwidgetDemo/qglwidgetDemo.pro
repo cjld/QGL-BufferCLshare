@@ -18,3 +18,13 @@ SOURCES += main.cpp\
 HEADERS  += widget.h
 
 FORMS    += widget.ui
+
+INCLUDEPATH += "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\include"
+INCLUDEPATH += "C:\Users\CJlegend\Desktop\openCLstd\ld_opencl_template"
+
+#LIBPATH += "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\Win32"
+
+LIBS += -LC:\Program\ Files\NVIDIA\ GPU\ Computing\ Toolkit\CUDA\v5.0\lib\Win32
+LIBS += -lopencl
+
+DEFINES += "__CL_ENABLE_EXCEPTIONS"

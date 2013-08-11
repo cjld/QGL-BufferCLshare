@@ -45,10 +45,15 @@ void Widget::initializeGL() {
     glGetIntegerv(GL_SAMPLES, &samples);
     qDebug("Have %d buffers and %d samples", bufs, samples);
 
-    //glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
     buffer=new QGLBuffer(QGLBuffer::VertexBuffer);
     buffer->create();
 
+    ldcl.init(wglGetCurrentContext(),wglGetCurrentDC());
+    ldcl.loadFunc("kernel.cl","main");
+    ldcl.setArg(&sfps,sizeof(sfps),CL_MEM_READ_WRITE,0);
+    buffer->bind();
+    buffer->allocate(sizeof(GLfloat)*2048*2);
+    ldcl.setArg(buffer->bufferId(),CL_MEM_READ_WRITE);
 
 }
 
@@ -59,18 +64,15 @@ void Widget::paintGL() {
     glLoadIdentity();
     glTranslatef(0,0,-6);
 
+    long long tt=clock();
+    ldcl.run();
+    qDebug()<<clock()-tt;
+
     buffer->bind();
 
-    GLfloat data[]={
-        0.0f, 0.0f, -10.0f,
-        0.0f, -1.0f, -10.0f,
-        -1.0f, -1.0f, -10.0f
-    };
-    buffer->allocate(data,sizeof(GLfloat)*9);
-
-    glVertexPointer(3,GL_FLOAT,0,0);
+    glVertexPointer(2,GL_FLOAT,0,0);
     glColor3f(1,1,1);
-    glDrawArrays(GL_LINE_LOOP,0,3);
+    glDrawArrays(GL_LINE_STRIP,0,2048);
 
     glBegin(GL_TRIANGLES);{
         glColor3f(0.5+sin(fps)*.5,0,0);
